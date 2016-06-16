@@ -5,9 +5,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>Tetris Attempt</title>
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" href="css/main.css" />
+<title>Black Attempt</title>
+<!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="css/main.css" /> -->
 </head>
 <body>
 
@@ -20,15 +20,37 @@
     <script>
 
     // make a deck of cards
-    var cards = [h1,h2,h3,h4,h5,h6,h7,h8,h9,h10,hj,hq,hk,s1,s2,s3,s4,s5,s6,s7,s8,s9s,s10,sj,sq,sk,d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,dj,dq,dk,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,cj,cq,ck,j1,j2]
+    var deck = ["h1","h2","h3","h4","h5","h6","h7","h8","h9","h10","hj","hq","hk","s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","dj","dq","dk","c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","cj","cq","ck","j1","j2"];
 
-    //make a draw function
-    var draw = function(){
-        console.log(Math.floor((Math.random() * 54) + 1);)
+
+    // draw the cards
+    
+    // shuffle the cards each time you draw, so that you can't cheat by just seeing the next in the deck
+    function shuffle_draw(array) { // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+  
+          // Pick a remaining element...
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+  
+          // And swap it with the current element.
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+  
+          
+        }
+      var card = deck.pop();
     }
 
+    // deck()
 
-
+    shuffle_draw(deck);
+    
+    console.log(deck);
 
     </script>
 
