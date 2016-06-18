@@ -28,25 +28,13 @@
 
       var i = 0
       symbols.forEach(function (s){ // for each symbol
-        console.log("s is " + s);
         values.forEach(function(v){ // for each value
-          console.log("v is " + v);
-          deck[i] = []; // make an array for the new card
-          deck[i][0] = s + v[0]; // the array's first element = symbol + value[0]
-          deck[i][1] = v[1]; // the array's second element = value[1]
+          deck[i] = []; // make an element that's also an array for the new card, in the position of the current index
+          deck[i][0] = s + v[0]; // the the new element/array's first element = symbol + value[0]
+          deck[i][1] = v[1]; // the new element/array's second element = value[1]
           i++; // increase the index
-        //   // console.log(deck[i]);
         });
       });
-
-      console.log(deck);
-
-
-
-    var deck2 = [["h1",1],["h2",2],["h3",3],["h4",4],["h5",5],["h6"],["h7"],["h8"],["h9"],["h10"],["hj"],["hq"],["hk"],["s1"],"s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","dj","dq","dk","c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","cj","cq","ck","j1","j2"];
-
-
-    // draw the cards
 
     // shuffle the cards each time you draw, so that you can't cheat by just seeing the next in the deck
     function shuffle_draw(array) { // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -66,13 +54,26 @@
 
 
         }
-      return card = deck.pop();
+      return card = deck.pop(); // removes the last card in the array and returns it
     }
 
     // deck()
 
-    dealer = []
-    // dealer.push(shuffle_draw(deck));
+    dealer_hand = []
+    function dealer() { 
+      dealer_hand.push(shuffle_draw(deck)); 
+      var total = 0
+      dealer_hand.forEach(function (element){
+        // console.log(element[1])
+        total += element[1];
+      });
+      console.log( "total: " + total )
+      return "total: " + total
+    }
+
+    dealer();
+    dealer();
+    dealer();
     // dealer.push(shuffle_draw(deck));
     // console.log(dealer);
     // dealer = dealer + shuffle_draw(deck)
