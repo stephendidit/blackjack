@@ -159,32 +159,29 @@ Shuffle Remaining Cards and begin again
       this.hand = [];
 
       this.draw = function(){
-        // deck.shuffle();
         this.hand.push( deck.hit() );
       }
     }
 
     function Player(){
-      this.hand = [];
+      // this.hand = [];
       this.wager = 25;
+      this.allThisPlayersHands = 0; // this will increase if player splits.
 
       this.draw = function(){
-        // deck.shuffle();
-        this.hand.push( deck.hit() );
+        this.hands[this.allThisPlayersHands]['hand'].push( deck.hit() );
       }
 
-      this.handIndex = 1 // this is how many hands the player is. by default, it's 1, but if they split, it increases...
       this.hands = [
           {
-            number: this.handIndex,
+            hand: [],
             played: false,
-            wager: this.wager
           }
         ]
       this.play = function(){ // this is for the user to play his hand
-        this.hands.forEach(function(h){ // for each hand, since the user may have more than one
-          while (!h.played){ // 
-        //     var options = ["stay", "hit"];
+        this.hands.forEach(function(hand){ // for each hand, since the user may have more than one
+          while (!hand.played){ // 
+            var options = ["stay", "hit"];
         //     if ("2 identical cards"){
         //       options << "split";
         //     }  
@@ -201,15 +198,15 @@ Shuffle Remaining Cards and begin again
         //         h.played = true if h > 21;
         //         break;
         //       case "split"
-        //         handIndex += 1;
-        //         h.push( {number: this.handIndex, played: false, wager: this.wager} );
+        //         allThisPlayersHands += 1;
+        //         h.push( {hand:[], played: false} );
         //         break;
         //       case "double"
         //         h.wager *= 2;
         //         break;
         //     } // switch
-            alert(h.played);
-            h.played = true;
+            alert(hand.played);
+            hand.played = true;
           }  // while hand unplayed
           console.log("out of the while loop now")
         }); // hands each
@@ -234,9 +231,9 @@ Shuffle Remaining Cards and begin again
     var me = new Player();
 
     myDealer.draw();
-    me.draw();
+    me.draw(0);
     myDealer.draw(); // this one would be face down
-    me.draw();
+    me.draw(0);
 
     me.play();
 
@@ -246,7 +243,7 @@ Shuffle Remaining Cards and begin again
     console.log(myDealer.hand);
 
     console.log("My hand:");
-    console.log(me.hand);
+    console.log(me.hands[0]);
     
 
 
