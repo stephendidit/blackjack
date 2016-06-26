@@ -11,19 +11,19 @@
 </head>
 <body>
 
-* Build Deck // built as buildDeck()
-* Shuffle Deck // built as shuffle()
-Place Wager
-  wager = wager1
-Deal one card to player (face up)
-Deal one card to dealer (face down)
-Deal one card to player (face up)
-Deal one card to dealer (face up)
+* 1. Build Deck // built as buildDeck()
+* 2. Shuffle Deck // built as shuffle()
+* 3. Place Wager
+  * wager = wager1
+4. Deal one card to player (face up)
+5. Deal one card to dealer (face down)
+6. Deal one card to player (face up)
+7. Deal one card to dealer (face up)
 
-Player Plays Hands
+8. Player Plays Hands
 
-* def hit() // built as hit()
-* end
+* 9. def hit() // built as hit()
+   * end
 
 def play()
   hand_i = 1
@@ -99,7 +99,17 @@ Shuffle Remaining Cards and begin again
     symbols = ['h','s','c','d'];
     values = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
     var deck = []
+    
+    player = []
 
+    // CREATE DEALER
+
+    function Dealer(){
+      this.dealer_hand = [];
+      this.draw = function(){
+        this.dealer_hand.push(hit(deck));   
+      }
+    }
 
     // BUILD DECK //
 
@@ -118,8 +128,8 @@ Shuffle Remaining Cards and begin again
     // SHUFFLE DECK //
 
     function shuffle(deck) { // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-      var currentIndex = deck.length, temporaryValue, randomIndex;
-
+      
+      var currentIndex = deck.length//, temporaryValue, randomIndex;
       // While there remain elements to shuffle...
         while (0 !== currentIndex) {
 
@@ -141,21 +151,27 @@ Shuffle Remaining Cards and begin again
     }
 
 
+    // GET WAGER //
 
-
-
-
-
+    wager = 25;
 
 
 
     // TESTS
 
     buildDeck();
+    
     shuffle(deck);
 
     card = hit(deck);
-    console.log(card);
+    // console.log(card);
+
+    var doug = new Dealer();
+    console.log("Dealer hand:")
+    console.log(doug.dealer_hand);
+    doug.draw();
+    console.log("Dealer hand:")
+    console.log(doug.dealer_hand);
 
     
     </script>
@@ -163,17 +179,9 @@ Shuffle Remaining Cards and begin again
 
 
     // dealer_hand = [["c10",10],["a",1],["c10",10]]
-    function Dealer(){
-      this.dealer_hand = [];  
-    }
-    
-    var doug = new Dealer();
-    console.log(doug.dealer_hand)
 
-    function dealerDraw() {
-      shuffle(); 
-      doug.dealer_hand.push(draw(deck)); 
-    }
+    
+
 
     var sometotal = 0
 
