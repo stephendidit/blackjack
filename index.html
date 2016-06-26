@@ -98,16 +98,16 @@ Shuffle Remaining Cards and begin again
     // GLOBAL //
     symbols = ['h','s','c','d'];
     values = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
-    var deck = []
     
     player = []
 
     // CREATE DEALER
 
     function Deck(){
-      console.log("New deck.")
+      console.log("New deck.");
+      this.cards = [];
       
-      this.build = function(){
+      this.build = function(deck){
         var i = 0
         symbols.forEach(function (s){ // for each symbol
           values.forEach(function(v){ // for each value
@@ -120,9 +120,9 @@ Shuffle Remaining Cards and begin again
         console.log("Deck built.")
       } // end build
 
-      this.shuffle = function(){ // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      this.shuffle = function(deck){ // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
       
-        var currentIndex = deck.length//, temporaryValue, randomIndex;
+        var currentIndex = deck.length, temporaryValue, randomIndex;
         // While there remain elements to shuffle...
         while (0 !== currentIndex) {
 
@@ -137,21 +137,29 @@ Shuffle Remaining Cards and begin again
         } // end while
         console.log("Shuffled deck.")
       } // end shuffle
+
+      this.hit = function(){
+        // console.log(deck);
+        return this.cards.pop();
+      }
+
     } // end Deck
     
 
     function Dealer(){
-      this.dealer_hand = [];
+      this.hand = [];
+
       this.draw = function(){
-        this.dealer_hand.push(hit(deck));   
+        this.hand.push( my_deck.hit() );
+
       }
     }
 
     // HIT //
 
-    function hit(deck){
-      return card = deck.pop(); // removes the last card in the array and returns it
-    }
+    // function hit(deck){
+    //   return card = deck.pop(); // removes the last card in the array and returns it
+    // }
 
 
     // GET WAGER //
@@ -163,21 +171,21 @@ Shuffle Remaining Cards and begin again
     // TESTS
 
     my_deck = new Deck();
-    my_deck.build();
-    // buildDeck();
+    my_deck.build(my_deck.cards);
     
-    my_deck.shuffle();
+    my_deck.shuffle(my_deck.cards);
 
-    card = hit(deck);
-    // console.log(card);
+    card = my_deck.hit(my_deck.cards);
+    console.log(card);
 
-    var doug = new Dealer();
+    var my_dealer = new Dealer();
     
-    my_deck.shuffle();
-    doug.draw();
+    my_deck.shuffle(my_deck.cards);
+    my_dealer.draw();
 
     console.log("Dealer hand:")
-    console.log(doug.dealer_hand);
+    console.log(my_dealer.hand);
+
 
     
     </script>
@@ -194,7 +202,7 @@ Shuffle Remaining Cards and begin again
     function total(player){
       var total = 0
       var aces = 0
-      doug.dealer_hand.forEach(function (element){
+      my_dealer.dealer_hand.forEach(function (element){
         if (element[1] == 1) {
           aces += 1;
         } else {
@@ -219,10 +227,10 @@ Shuffle Remaining Cards and begin again
     console.log(sometotal);
     while (sometotal <= 17) {
       dealerDraw();
-      total(doug.dealer_hand); 
+      total(my_dealer.dealer_hand); 
     }
-    console.log("finally is..." + total(doug.dealer_hand));
-    console.log("the hand is..." + String(doug.dealer_hand))
+    console.log("finally is..." + total(my_dealer.dealer_hand));
+    console.log("the hand is..." + String(my_dealer.dealer_hand))
 
 </body>
 </html>
