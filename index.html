@@ -98,34 +98,39 @@ Shuffle Remaining Cards and begin again
 
 
     // GLOBAL //
-    symbols = ['h','s','c','d'];
-    values = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
+    suitsArray = ['h','s','c','d'];
+    valuesArray = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
     
     // DECK //
     function Deck(){
       console.log("New deck.");
       this.cards = [];
 
-      this.build = function(deck,numberOfDecks){
-        var j = 0
-        var i = 0
-        while (j < numberOfDecks){          
-          symbols.forEach(function (s){ // for each symbol
-            values.forEach(function(v){ // for each value
-              deck[i] = []; // make an element that's also an array for the new card, in the position of the current index
-              deck[i][0] = s + v[0]; // the the new element/array's first element = symbol + value[0]
-              deck[i][1] = v[1]; // the new element/array's second element = value[1]
-              i++; // increase the index
+      this.build = function(requestedNumberOfDecks){
+        var ValuesArrayFaceOffset = 0;
+        var ValuesArrayFaceValueOffset = 1;
+        var numberOfDecksBuilt = 0
+        var cardsArrayOffset = 0
+
+        while (numberOfDecksBuilt < requestedNumberOfDecks){          
+          suitsArray.forEach(function (suit){ // for each symbol
+            valuesArray.forEach(function(value){ // for each value
+              
+              // I'D RATHER THE NEXT LINES BEGIN W/ this.cards, BUT THAT PRODUCES AN ERROR THAT DECK.CARDS IS UNDEFINED. WHY?
+              deck.cards[cardsArrayOffset] = []; // make an element that's also an array for the new card, in the position of the current index
+              deck.cards[cardsArrayOffset][0] = suit + value[ValuesArrayFaceOffset]; // the the new element/array's first element = symbol + value[0]
+              deck.cards[cardsArrayOffset][1] = value[ValuesArrayFaceValueOffset]; // the new element/array's second element = value[1]
+              cardsArrayOffset++; // increase the index
             });
           });
-          j++;
+          numberOfDecksBuilt++;
         }
         console.log("Deck built.")
       } // end build
 
-      this.shuffle = function(deck){ // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      this.shuffle = function(){ // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
       
-        var currentIndex = deck.length, temporaryValue, randomIndex;
+        var currentIndex = this.cards.length, temporaryValue, randomIndex;
         // While there remain elements to shuffle...
         while (0 !== currentIndex) {
 
@@ -134,9 +139,9 @@ Shuffle Remaining Cards and begin again
           currentIndex -= 1;
 
           // And swap it with the current element.
-          temporaryValue = deck[currentIndex];
-          deck[currentIndex] = deck[randomIndex];
-          deck[randomIndex] = temporaryValue;
+          temporaryValue = this.cards[currentIndex];
+          this.cards[currentIndex] = this.cards[randomIndex];
+          this.cards[randomIndex] = temporaryValue;
         } // end while
         console.log("Shuffled deck.")
       } // end shuffle
@@ -153,8 +158,8 @@ Shuffle Remaining Cards and begin again
       this.hand = [];
 
       this.draw = function(){
-        myDeck.shuffle(myDeck.cards);
-        this.hand.push( myDeck.hit() );
+        deck.shuffle();
+        this.hand.push( deck.hit() );
       }
     }
 
@@ -163,8 +168,8 @@ Shuffle Remaining Cards and begin again
       this.wager = 25;
 
       this.draw = function(){
-        myDeck.shuffle(myDeck.cards);
-        this.hand.push( myDeck.hit() );
+        deck.shuffle();
+        this.hand.push( deck.hit() );
       }
 
       this.handIndex = 1 // this is how many hands the player is. by default, it's 1, but if they split, it increases...
@@ -217,10 +222,10 @@ Shuffle Remaining Cards and begin again
 
     // TESTS
 
-    myDeck = new Deck();
-    myDeck.build(myDeck.cards,howManyDecks);
+    deck = new Deck();
+    deck.build(howManyDecks);
 
-    // card = myDeck.hit(myDeck.cards);
+    // card = deck.hit(deck.cards);
     // console.log(card);
 
     var myDealer = new Dealer();
@@ -242,6 +247,10 @@ Shuffle Remaining Cards and begin again
     console.log("My hand:");
     console.log(me.hand);
     
+
+
+
+
     </script>
 
 
