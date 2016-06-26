@@ -104,33 +104,26 @@ Shuffle Remaining Cards and begin again
 
     // CREATE DEALER
 
-    function Dealer(){
-      this.dealer_hand = [];
-      this.draw = function(){
-        this.dealer_hand.push(hit(deck));   
-      }
-    }
-
-    // BUILD DECK //
-
-    function buildDeck(){
-      var i = 0
-      symbols.forEach(function (s){ // for each symbol
-        values.forEach(function(v){ // for each value
-          deck[i] = []; // make an element that's also an array for the new card, in the position of the current index
-          deck[i][0] = s + v[0]; // the the new element/array's first element = symbol + value[0]
-          deck[i][1] = v[1]; // the new element/array's second element = value[1]
-          i++; // increase the index
-        });
-      });  
-    }
-
-    // SHUFFLE DECK //
-
-    function shuffle(deck) { // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    function Deck(){
+      console.log("New deck.")
       
-      var currentIndex = deck.length//, temporaryValue, randomIndex;
-      // While there remain elements to shuffle...
+      this.build = function(){
+        var i = 0
+        symbols.forEach(function (s){ // for each symbol
+          values.forEach(function(v){ // for each value
+            deck[i] = []; // make an element that's also an array for the new card, in the position of the current index
+            deck[i][0] = s + v[0]; // the the new element/array's first element = symbol + value[0]
+            deck[i][1] = v[1]; // the new element/array's second element = value[1]
+            i++; // increase the index
+          });
+        });  
+        console.log("Deck built.")
+      } // end build
+
+      this.shuffle = function(){ // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      
+        var currentIndex = deck.length//, temporaryValue, randomIndex;
+        // While there remain elements to shuffle...
         while (0 !== currentIndex) {
 
           // Pick a remaining element...
@@ -141,7 +134,17 @@ Shuffle Remaining Cards and begin again
           temporaryValue = deck[currentIndex];
           deck[currentIndex] = deck[randomIndex];
           deck[randomIndex] = temporaryValue;
-        }
+        } // end while
+        console.log("Shuffled deck.")
+      } // end shuffle
+    } // end Deck
+    
+
+    function Dealer(){
+      this.dealer_hand = [];
+      this.draw = function(){
+        this.dealer_hand.push(hit(deck));   
+      }
     }
 
     // HIT //
@@ -159,17 +162,20 @@ Shuffle Remaining Cards and begin again
 
     // TESTS
 
-    buildDeck();
+    my_deck = new Deck();
+    my_deck.build();
+    // buildDeck();
     
-    shuffle(deck);
+    my_deck.shuffle();
 
     card = hit(deck);
     // console.log(card);
 
     var doug = new Dealer();
-    console.log("Dealer hand:")
-    console.log(doug.dealer_hand);
+    
+    my_deck.shuffle();
     doug.draw();
+
     console.log("Dealer hand:")
     console.log(doug.dealer_hand);
 
