@@ -147,6 +147,7 @@ Shuffle Remaining Cards and begin again
       } // end shuffle
 
       this.hit = function(){
+        this.shuffle();
         return this.cards.pop();
       }
 
@@ -158,7 +159,7 @@ Shuffle Remaining Cards and begin again
       this.hand = [];
 
       this.draw = function(){
-        deck.shuffle();
+        // deck.shuffle();
         this.hand.push( deck.hit() );
       }
     }
@@ -168,7 +169,7 @@ Shuffle Remaining Cards and begin again
       this.wager = 25;
 
       this.draw = function(){
-        deck.shuffle();
+        // deck.shuffle();
         this.hand.push( deck.hit() );
       }
 
