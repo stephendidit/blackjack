@@ -198,7 +198,6 @@ Shuffle Remaining Cards and begin again
     function Player(){
       // this.hand = [];
       this.wager = 25;
-      this.allThisPlayersHands = 0; // this will increase if player splits.
 
       this.draw = function(whichHandNumber){
         this.hands[whichHandNumber]['hand'].push( deck.hit() );
@@ -243,13 +242,11 @@ Shuffle Remaining Cards and begin again
                 }
                 break;
               case "split":
-                me.allThisPlayersHands += 1;
-                // alert(n)
-                this.hands[n + 1].push( {hand:[], played: false} );
+                totalNumberOfPlayerHands = (Object.keys(this.hands).length); // gets "object of objects" length
+                this.hands[totalNumberOfPlayerHands + 1] = {hand:[], played: false} // new object assigned to next integer
                 console.log(me.hands);
-                // I NEED TO ADD IN THE DRAW FUNCTIONS FOR THIS!!!!
                 console.log("begin play again...");
-                me.play();
+                me.play(); // begin playing from the top to refresh the counts on all the things....
                 break;
               case "double":
                 this.hands[n].wager *= 2;
