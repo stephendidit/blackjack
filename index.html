@@ -102,15 +102,17 @@ Shuffle Remaining Cards and begin again
     valuesArray = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
     
     function totalHand(hand){ // total up a player's hand? or just the dealer's?
+              // console.info(this.hands[n].hand)
+
       var totalValueOfHand = 0; // zero out the total
       var numberOfAcesInHand = 0; // zero out the number of aces...i think this is dealer's totaling, then.
-      var CARD_VALUE = 1;
-
-      hand['hand'].forEach(function (card){ // for each element in the dealer's hand
-        if (card[CARD_VALUE] == 1) {
+      var CARD_VALUE_OFFSET = 1;
+      hand.forEach(function(card){ // for each element in the dealer's hand
+        // console.info(c)
+        if (card[CARD_VALUE_OFFSET] == 1) {
           numberOfAcesInHand += 1; // add 1 to the number of aces we're counting
         } else { // but if it's not an ace...
-          totalValueOfHand += card[CARD_VALUE]; // then add the card to the total
+          totalValueOfHand += card[CARD_VALUE_OFFSET]; // then add the card to the total
         }
       });
 
@@ -198,25 +200,24 @@ Shuffle Remaining Cards and begin again
       this.wager = 25;
       this.allThisPlayersHands = 0; // this will increase if player splits.
 
-      this.draw = function(){
-        this.hands[this.allThisPlayersHands]['hand'].push( deck.hit() );
+      this.draw = function(whichHandNumber){
+        this.hands[whichHandNumber]['hand'].push( deck.hit() );
         console.log("just drew");
       }
 
-      this.hands = [
-          {
+      this.hands = {
+          1: {
             hand: [],
             played: false
           }
-        ]
+        }
       this.play = function(){ // this is for the user to play his hand
-        // i = 0
-        this.hands.forEach(function(hand){ // for each hand, since the user may have more than one
-          
-          hand.totalValue = totalHand(hand);
-          console.log("pre-while Hand value: " + hand.totalValue);
+        for (var n in this.hands){ // for each hand, since the user may have more than one
+
+          this.hands[n].totalValue = totalHand(this.hands[n].hand);
+          console.log("pre-while Hand value: " + this.hands[n].totalValue);
           var firstRoundOfDecisionMakingForPlayer = true;
-          while (!hand.played){ // 
+          while (!this.hands[n]['played']){ // 
             
             var options = [];
         //     if ("2 identical cards"){
@@ -228,45 +229,45 @@ Shuffle Remaining Cards and begin again
             } else {
               options.push("stay","hit");
             }
-            var move = window.prompt(options);
+            var move = window.prompt("for hand " + n + " " + options);
             switch(move){
               case "stay":
-                hand.played = true;
+                this.hands[n].played = true;
                 break;
               case "hit":
-                me.draw();
-                hand.totalValue = totalHand(hand);
-                if (hand.totalValue > 21){
-                  hand.played = true;
+                me.draw(n);
+                this.hands[n].totalValue = totalHand(this.hands[n].hand);
+                if (this.hands[n].totalValue > 21){
+                  this.hands[n].played = true;
                   console.log("BUST!")
                 }
                 break;
               case "split":
                 me.allThisPlayersHands += 1;
-                me.hands.push( {hand:[], played: false} );
+                // alert(n)
+                this.hands[n + 1].push( {hand:[], played: false} );
                 console.log(me.hands);
                 // I NEED TO ADD IN THE DRAW FUNCTIONS FOR THIS!!!!
                 console.log("begin play again...");
                 me.play();
                 break;
               case "double":
-                hand.wager *= 2;
+                this.hands[n].wager *= 2;
                 me.draw();
-                hand.totalValue = totalHand(hand);
+                this.hands[n].totalValue = totalHand(hand);
                 break;
               default:
                 console.log("QUIT");
-                hand.played = true;
+                this.hands[n].played = true;
                 break;
             } // switch
-            hand.totalValue = totalHand(hand);
-            console.log("post-move/inside while Hand value: " + hand.totalValue);
+            this.hands[n].totalValue = totalHand(this.hands[n].hand);
+            console.log("post-move/inside while Hand value: " + this.hands[n].totalValue);
 
             // alert(hand.totalValue);
           }  // while hand unplayed
-          // i++
           console.log("out of the while loop now");
-        }); // hands each
+        }; // hands each
       } // def play
     }
 
@@ -288,9 +289,9 @@ Shuffle Remaining Cards and begin again
     var me = new Player();
 
     myDealer.draw();
-    me.draw(0);
+    me.draw(1);
     myDealer.draw(); // this one would be face down
-    me.draw(0);
+    me.draw(1);
 
     me.play();
 
