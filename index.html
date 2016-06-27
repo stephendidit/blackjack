@@ -210,10 +210,11 @@ Shuffle Remaining Cards and begin again
           }
         ]
       this.play = function(){ // this is for the user to play his hand
-
+        // i = 0
         this.hands.forEach(function(hand){ // for each hand, since the user may have more than one
+          
           hand.totalValue = totalHand(hand);
-          console.log("Hand value: " + hand.totalValue);
+          console.log("pre-while Hand value: " + hand.totalValue);
           var firstRoundOfDecisionMakingForPlayer = true;
           while (!hand.played){ // 
             
@@ -240,10 +241,14 @@ Shuffle Remaining Cards and begin again
                   console.log("BUST!")
                 }
                 break;
-        //       case "split":
-        //         allThisPlayersHands += 1;
-        //         h.push( {hand:[], played: false} );
-        //         break;
+              case "split":
+                me.allThisPlayersHands += 1;
+                me.hands.push( {hand:[], played: false} );
+                console.log(me.hands);
+                // I NEED TO ADD IN THE DRAW FUNCTIONS FOR THIS!!!!
+                console.log("begin play again...");
+                me.play();
+                break;
               case "double":
                 hand.wager *= 2;
                 me.draw();
@@ -255,8 +260,11 @@ Shuffle Remaining Cards and begin again
                 break;
             } // switch
             hand.totalValue = totalHand(hand);
-            alert(hand.totalValue);
+            console.log("post-move/inside while Hand value: " + hand.totalValue);
+
+            // alert(hand.totalValue);
           }  // while hand unplayed
+          // i++
           console.log("out of the while loop now");
         }); // hands each
       } // def play
