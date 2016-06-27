@@ -197,6 +197,7 @@ Shuffle Remaining Cards and begin again
 
     function Player(){
       // this.hand = [];
+      this.purse = 100;
       this.wager = 25;
 
       this.draw = function(whichHandNumber){
@@ -218,6 +219,16 @@ Shuffle Remaining Cards and begin again
           handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
           console.log("pre-while Hand value: " + handCurrentlyBeingPlayed.totalValue);
           var firstRoundOfDecisionMakingForPlayer = true;
+
+          
+          if ( (Object.keys(handCurrentlyBeingPlayed.hand).length == 2) && handCurrentlyBeingPlayed.totalValue == 21) { 
+            alert("BLACKJACK YOU FOOL!")
+            this.purse += (this.wager * 1.5)
+            handCurrentlyBeingPlayed['played'] = true;
+            alert("$" + this.purse)
+          }
+
+
           while (!handCurrentlyBeingPlayed['played']){ // 
             
             var options = [];
