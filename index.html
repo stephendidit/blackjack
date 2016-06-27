@@ -200,7 +200,7 @@ Shuffle Remaining Cards and begin again
 
       this.draw = function(){
         this.hands[this.allThisPlayersHands]['hand'].push( deck.hit() );
-        alert("just drew");
+        console.log("just drew");
       }
 
       this.hands = [
@@ -214,14 +214,18 @@ Shuffle Remaining Cards and begin again
         this.hands.forEach(function(hand){ // for each hand, since the user may have more than one
           hand.totalValue = totalHand(hand);
           console.log("Hand value: " + hand.totalValue);
-          
+          var firstRoundOfDecisionMakingForPlayer = true;
           while (!hand.played){ // 
-            var options = ["stay", "hit"];
+            
+            var options = [];
         //     if ("2 identical cards"){
         //       options << "split";
         //     }  
-            if ("first play"){
-              options.push("double");
+            if (firstRoundOfDecisionMakingForPlayer == true){
+              options.push("double","stay","hit");
+              firstRoundOfDecisionMakingForPlayer = false;
+            } else {
+              options.push("stay","hit");
             }
             var move = window.prompt(options);
             switch(move){
@@ -231,7 +235,6 @@ Shuffle Remaining Cards and begin again
               case "hit":
                 me.draw();
                 hand.totalValue = totalHand(hand);
-
                 if (hand.totalValue > 21){
                   hand.played = true;
                   console.log("BUST!")
@@ -246,12 +249,14 @@ Shuffle Remaining Cards and begin again
                 me.draw();
                 hand.totalValue = totalHand(hand);
                 break;
+              default:
+                console.log("QUIT");
+                hand.played = true;
+                break;
             } // switch
             hand.totalValue = totalHand(hand);
             alert(hand.totalValue);
-            // hand.played = true;
           }  // while hand unplayed
-          console.log("out of the while loop now");
           console.log("out of the while loop now");
         }); // hands each
       } // def play
