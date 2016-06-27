@@ -101,7 +101,37 @@ Shuffle Remaining Cards and begin again
     suitsArray = ['h','s','c','d'];
     valuesArray = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
     
+    function totalHand(hand){ // total up a player's hand? or just the dealer's?
+      var totalValueOfHand = 0; // zero out the total
+      var numberOfAcesInHand = 0; // zero out the number of aces...i think this is dealer's totaling, then.
+      var CARD_VALUE = 1;
+
+      hand['hand'].forEach(function (card){ // for each element in the dealer's hand
+        if (card[CARD_VALUE] == 1) {
+          numberOfAcesInHand += 1; // add 1 to the number of aces we're counting
+        } else { // but if it's not an ace...
+          totalValueOfHand += card[CARD_VALUE]; // then add the card to the total
+        }
+      });
+
+      while (numberOfAcesInHand > 0){ // while there's more than 0 aces
+        if ((totalValueOfHand + 11) > 21){ // if the total + 11 goes over 21
+          totalValueOfHand +=1; // then the ace needs to be treated as a 1
+        } else { // otherwise
+          totalValueOfHand += 11; // treat it as an 11
+        }
+        numberOfAcesInHand--; // remove one ace from the count
+      }
+
+      return totalValueOfHand
+
+    }
+
+
     // DECK //
+    
+
+
     function Deck(){
       console.log("New deck.");
       this.cards = [];
@@ -170,45 +200,59 @@ Shuffle Remaining Cards and begin again
 
       this.draw = function(){
         this.hands[this.allThisPlayersHands]['hand'].push( deck.hit() );
+        alert("just drew");
       }
 
       this.hands = [
           {
             hand: [],
-            played: false,
+            played: false
           }
         ]
       this.play = function(){ // this is for the user to play his hand
+
         this.hands.forEach(function(hand){ // for each hand, since the user may have more than one
+          hand.totalValue = totalHand(hand);
+          console.log("Hand value: " + hand.totalValue);
+          
           while (!hand.played){ // 
             var options = ["stay", "hit"];
         //     if ("2 identical cards"){
         //       options << "split";
         //     }  
-        //     if ("first play"){
-        //       options << "double";
-        //     }
-        //     window.prompt(options);
-        //     switch(options){
-        //       case "stay"
-        //         h.played = true;
-        //         break;
-        //       case "hit"
-        //         this.draw();
-        //         h.played = true if h > 21;
-        //         break;
-        //       case "split"
+            if ("first play"){
+              options.push("double");
+            }
+            var move = window.prompt(options);
+            switch(move){
+              case "stay":
+                hand.played = true;
+                break;
+              case "hit":
+                me.draw();
+                hand.totalValue = totalHand(hand);
+
+                if (hand.totalValue > 21){
+                  hand.played = true;
+                  console.log("BUST!")
+                }
+                break;
+        //       case "split":
         //         allThisPlayersHands += 1;
         //         h.push( {hand:[], played: false} );
         //         break;
-        //       case "double"
-        //         h.wager *= 2;
-        //         break;
-        //     } // switch
-            alert(hand.played);
-            hand.played = true;
+              case "double":
+                hand.wager *= 2;
+                me.draw();
+                hand.totalValue = totalHand(hand);
+                break;
+            } // switch
+            hand.totalValue = totalHand(hand);
+            alert(hand.totalValue);
+            // hand.played = true;
           }  // while hand unplayed
-          console.log("out of the while loop now")
+          console.log("out of the while loop now");
+          console.log("out of the while loop now");
         }); // hands each
       } // def play
     }
@@ -239,11 +283,11 @@ Shuffle Remaining Cards and begin again
 
     // myDealer.draw();
 
-    console.log("Dealer hand:");
-    console.log(myDealer.hand);
+    // console.log("Dealer hand:");
+    // console.log(myDealer.hand);
 
-    console.log("My hand:");
-    console.log(me.hands[0]);
+    // console.log("My hand:");
+    // console.log(me.hands[0]);
     
 
 
@@ -267,32 +311,7 @@ Shuffle Remaining Cards and begin again
 
     var sometotal = 0 // who knows what this var is?
 
-    function total(player){ // total up a player's hand? or just the dealer's?
-      var total = 0 // zero out the total
-      var aces = 0 // zero out the number of aces...i think this is dealer's totaling, then.
-      
-      myDealer.dealer_hand.forEach(function (element){ // for each element in the dealer's hand
-        if (element[1] == 1) { // if card value is 1
-          aces += 1; // add 1 to the number of aces we're counting
-        } else { // but if it's not an ace...
-          total += element[1]; then add the card to the total
-        }
-      });
-
-      while (aces > 0){ // while there's more than 0 aces
-        if ((total + 11) > 21){ // if the total + 11 goes over 21
-          total +=1; // then the ace needs to be treated as a 1
-        } else { // otherwise
-          total += 11; // treat it as an 11
-        }
-        aces--; // remove one ace from the count
-      }
-
-      // console.log(String(dealer_hand));
-      // console.log( "total: " + total )
-      sometotal = total; // send the total back to sometotal, i don't know why...
-      return "total: " + total; // this is probably a mistake...why would i return this?
-    }
+    
 
     console.log(sometotal); // should begin as 0, i guess....
     while (sometotal <= 17) { // if sometotal is less than 17...sometotal should be the more like myDealer.total
