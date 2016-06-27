@@ -102,7 +102,7 @@ Shuffle Remaining Cards and begin again
     valuesArray = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
     
     function totalHand(hand){ // total up a player's hand? or just the dealer's?
-              // console.info(this.hands[n].hand)
+              // console.info(handCurrentlyBeingPlayed.hand)
 
       var totalValueOfHand = 0; // zero out the total
       var numberOfAcesInHand = 0; // zero out the number of aces...i think this is dealer's totaling, then.
@@ -211,12 +211,14 @@ Shuffle Remaining Cards and begin again
           }
         }
       this.play = function(){ // this is for the user to play his hand
-        for (var n in this.hands){ // for each hand, since the user may have more than one
+        for (var oneOfPlayersHands in this.hands){ // for each hand, since the user may have more than one
 
-          this.hands[n].totalValue = totalHand(this.hands[n].hand);
-          console.log("pre-while Hand value: " + this.hands[n].totalValue);
+          handCurrentlyBeingPlayed = this.hands[oneOfPlayersHands];
+
+          handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
+          console.log("pre-while Hand value: " + handCurrentlyBeingPlayed.totalValue);
           var firstRoundOfDecisionMakingForPlayer = true;
-          while (!this.hands[n]['played']){ // 
+          while (!handCurrentlyBeingPlayed['played']){ // 
             
             var options = [];
         //     if ("2 identical cards"){
@@ -228,38 +230,40 @@ Shuffle Remaining Cards and begin again
             } else {
               options.push("stay","hit");
             }
-            var move = window.prompt("for hand " + n + " " + options);
+            var move = window.prompt("for hand " + oneOfPlayersHands + " " + options);
             switch(move){
               case "stay":
-                this.hands[n].played = true;
+                handCurrentlyBeingPlayed.played = true;
                 break;
               case "hit":
-                me.draw(n);
-                this.hands[n].totalValue = totalHand(this.hands[n].hand);
-                if (this.hands[n].totalValue > 21){
-                  this.hands[n].played = true;
+                me.draw(oneOfPlayersHands);
+                handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
+                if (handCurrentlyBeingPlayed.totalValue > 21){
+                  handCurrentlyBeingPlayed.played = true;
                   console.log("BUST!")
                 }
                 break;
               case "split":
                 totalNumberOfPlayerHands = (Object.keys(this.hands).length); // gets "object of objects" length
                 this.hands[totalNumberOfPlayerHands + 1] = {hand:[], played: false} // new object assigned to next integer
+                me.draw(totalNumberOfPlayerHands + 1);
+                me.draw(totalNumberOfPlayerHands + 1);
                 console.log(me.hands);
                 console.log("begin play again...");
                 me.play(); // begin playing from the top to refresh the counts on all the things....
                 break;
               case "double":
-                this.hands[n].wager *= 2;
+                handCurrentlyBeingPlayed.wager *= 2;
                 me.draw();
-                this.hands[n].totalValue = totalHand(hand);
+                handCurrentlyBeingPlayed.totalValue = totalHand(hand);
                 break;
               default:
                 console.log("QUIT");
-                this.hands[n].played = true;
+                handCurrentlyBeingPlayed.played = true;
                 break;
             } // switch
-            this.hands[n].totalValue = totalHand(this.hands[n].hand);
-            console.log("post-move/inside while Hand value: " + this.hands[n].totalValue);
+            handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
+            console.log("post-move/inside while Hand value: " + handCurrentlyBeingPlayed.totalValue);
 
             // alert(hand.totalValue);
           }  // while hand unplayed
