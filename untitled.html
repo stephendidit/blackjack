@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+</head>
+
+<body>
+
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">
+    	
+		bits = {
+			a: {ready: true},
+			b: {ready: true},
+			c: {ready: true}
+		};
+
+		for (var bit in bits){
+			if ( bits[bit]['ready'] == true ){
+				console.log(bit);
+				break;
+			}
+		}
+
+
+    </script>
+
+</body>
+
+</html>
