@@ -8,7 +8,34 @@
 <title>Blackjack Attempt</title>
 <!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" /> -->
 <!-- <link rel="stylesheet" type="text/css" href="css/main.css" /> -->
+
 </head>
+<style>
+  .hand {
+    background-color: #277714;
+    float: left;
+    border: dodgerblue solid 1px;
+    margin: 10px;
+    padding: 5px;
+  }
+  #player {
+    background-color: lightsalmon;
+  }
+  #buttons {
+    clear: both;
+  }
+
+  .card {
+    background-color: whitesmoke;
+    padding: 2px;
+    border-radius: 3px;
+    float: left;
+    margin: 5px;
+    height: 3.5rem;
+    width: 2.5rem;
+
+  }
+</style>
 <body>
 <h3>Bugs:</h3>
 <ol>
@@ -20,6 +47,8 @@
 <div id="scores">
   <div id="wager"></div>
   <div id="purse"></div>
+</div>
+<div id="player">Player Box
 </div>
 
 <!-- 
@@ -59,7 +88,7 @@ end
 Discard Used Cards
 Shuffle Remaining Cards and begin again -->
 
-<div>
+<div id="buttons">
   <button id="hit" hidden>Hit</button>
   <button id="stay" hidden>Stay</button>
   <button id="double" hidden>Double</button>
@@ -81,6 +110,23 @@ Shuffle Remaining Cards and begin again -->
 // GLOBAL //
 var suitsArray = ['h','s','c','d'];
 var valuesArray = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
+
+function renderHands(){
+  $('#player').empty();
+
+  for (var i = 1; i <= countNumberOfPlayerHisHands(player.hands); i++){
+    var code = "<div class='hand' id='hand" + i + "'>"
+
+    player.hands[i].hand.forEach(function(card){
+      var suit = card[0].charAt(0).replace("d","&#9830;").replace("s","&#9824;").replace("h","&#9829;").replace("c","&#9827;")
+      var value = card[0].substring(1);
+      code += "<div class='card'>" + suit + value.toUpperCase() + "</div>";
+    });
+
+    code += "</div>"
+    $('#player').append(code);
+  };
+}
 
 function totalHand(hand){
   var totalValueOfHand = 0; // zero out the total
@@ -191,6 +237,7 @@ function Dealer(){
 
   this.draw = function(){
     this.hand.push( deck.getNewCardFrom() );
+
   };
 
   this.play = function(){
@@ -238,6 +285,7 @@ function Player(){
     console.log("about to draw card for hand " + whichHandNumber)
     var handToAddNewCardTo = this.hands[whichHandNumber]['hand']
     handToAddNewCardTo.push( deck.getNewCardFrom() );
+    renderHands();
   };
 
   this.hit = function(thisHandNumber,handCurrentlyBeingPlayed){
@@ -268,6 +316,7 @@ function Player(){
   }
 
   this.split = function(){
+
     // console.log("---------------->\njust began player.split")
     var totalNumberOfPlayerHands = countNumberOfPlayerHisHands(this.hands); // gets "object of objects" length
 
