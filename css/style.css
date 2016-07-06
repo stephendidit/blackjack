@@ -5,7 +5,7 @@
     margin: 10px;
     padding: 5px;
   }
-  #player {
+  #player-box, #dealer-box {
     background-color: lightsalmon;
   }
   #buttons {
@@ -20,4 +20,9 @@
     margin: 5px;
     height: 3.5rem;
     width: 2.5rem;
+  }
+
+  .count {
+    margin-left: 5px;
+    color: whitesmoke;
   }

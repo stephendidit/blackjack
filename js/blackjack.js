@@ -14,7 +14,7 @@ function renderHands(){
       code += "<div class='card'>" + suit + value.toUpperCase() + "</div>";
     });
 
-    code += "</div>"
+    code += "<div class='count'>" + totalHand(player.hands[i].hand) + "</div></div>"
     $('#player').append(code);
   };
 }
