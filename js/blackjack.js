@@ -17,6 +17,14 @@ function renderHands(){
     code += "<div class='count'>" + totalHand(player.hands[i].hand) + "</div></div>"
     $('#player').append(code);
   };
+
+  for (var i = 1; i <= countNumberOfPlayerHisHands(player.hands); i++){
+
+    if (player.hands[i].played == false){
+      $('#hand' + i).addClass("active-hand");
+      break;
+    }
+  };
 }
 
 function totalHand(hand){
@@ -169,6 +177,7 @@ function Player(){
 
   this.stay = function(handCurrentlyBeingPlayed){
     handCurrentlyBeingPlayed.played = true;
+    renderHands();
     player.play();
   }
 
@@ -190,6 +199,7 @@ function Player(){
       this.lose();
       
       console.log("BUST!");
+      renderHands();
 
       game.disableAllButtons();
       // player.play();
@@ -197,6 +207,7 @@ function Player(){
       handCurrentlyBeingPlayed.played = true;
       console.log("This is the best score you can get with this hand--so...moving on!")
       game.disableAllButtons();
+      renderHands();
     }
 
     // handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
@@ -214,6 +225,9 @@ function Player(){
     this.hands[totalNumberOfPlayerHands + 1] = {hand:[], played: false}; // new object assigned to next integer
 
     totalNumberOfPlayerHands = countNumberOfPlayerHisHands(this.hands); // gets "object of objects" length
+
+    player.draw(totalNumberOfPlayerHands);
+    player.draw(totalNumberOfPlayerHands);
 
     console.log("totalNumberOfPlayerHands = " + totalNumberOfPlayerHands);
   }
