@@ -175,7 +175,7 @@ function Player(){
     refreshPurse();
   }
 
-  this.stay = function(handCurrentlyBeingPlayed){
+  this.stand = function(handCurrentlyBeingPlayed){
     handCurrentlyBeingPlayed.played = true;
     renderHands();
     player.play();
@@ -235,10 +235,10 @@ function Player(){
   this.setPlayActionButtons = function(isHandFirstMove){
     if (isHandFirstMove === true){
       game.disableAllButtons();
-      game.showButtons("double","stay","hit","split");
+      game.showButtons("double","stand","hit","split");
       isHandFirstMove = false;
     } else {
-      game.showButtons("stay","hit","split");
+      game.showButtons("stand","hit","split");
     }
   }
 
@@ -299,8 +299,8 @@ function Player(){
       player.split();
     });
 
-    $('#stay').click(function(){
-      player.stay(handCurrentlyBeingPlayed);
+    $('#stand').click(function(){
+      player.stand(handCurrentlyBeingPlayed);
       // handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
       // console.log("post-move/inside while Hand value: " + handCurrentlyBeingPlayed.totalValue);
     });
