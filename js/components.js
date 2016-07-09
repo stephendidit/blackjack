@@ -14,7 +14,28 @@ class ScoreBox extends React.Component {
 	}
 }
 
+class Buttons extends React.Component {
+	render(){
+		return(
+			<div>
+			  <button id="hit">Hit</button>
+			  <button id="stand">Stand</button>
+			  <button id="double">Double</button>
+			  <button id="split">Split</button>
+			  <button id="drawpush">Draw/Push</button>
+			</div>
+		)
+	}
+}
+
+
 let scorebox = document.getElementById( 'scorebox' );
+let buttons = document.getElementById( 'buttons' );
+
+
+ReactDOM.render(
+	<Buttons />, buttons
+);
 
 ReactDOM.render(
 	<ScoreBox />, scorebox

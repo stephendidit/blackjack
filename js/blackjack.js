@@ -170,6 +170,11 @@ function Player(){
     refreshPurse();
   }
 
+  this.double = function(){
+    this.wager = this.wager * 2;
+    $('#wager').html("Wager: $" + this.wager);
+  }
+
   this.win = function(){
     player.purse += player.wager;
     refreshPurse();
@@ -293,6 +298,10 @@ function Player(){
       player.play();
       console.log(player.hands);
     });
+
+    $('#double').click(function(){
+      player.double();
+    })
 
 
     $('#split').click(function(){
