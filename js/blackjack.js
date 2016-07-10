@@ -118,6 +118,9 @@ function Shoe(){
       });
       numberOfDecksBuilt++;
     }
+
+    this.setInitialCardCount();
+    // this.setCurrentCardCount();
   }; // end build
 
   this.shuffle = function(){ // https://github.com/coolaj86/knuth-shuffle , http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -177,39 +180,35 @@ function Player(){
     }
   };
 
-  this.lose = function(){
-    player.purse -= player.wager;
-    refreshPurse();
-  }
-
   this.double = function(){
     this.wager = this.wager * 2;
     $('#wager').html("Wager: $" + this.wager);
   }
 
-  this.win = function(){
-    player.purse += player.wager;
-    refreshPurse();
-  }
-
-  this.stand = function(handCurrentlyBeingPlayed){
-    handCurrentlyBeingPlayed.played = true;
-    renderHands();
-    player.play();
-  }
-
   this.draw = function(whichHandNumber){
-    console.log("about to draw card for hand " + whichHandNumber)
     var handToAddNewCardTo = this.hands[whichHandNumber]['hand']
     handToAddNewCardTo.push( shoe.getNewCardFrom() );
+
     renderHands();
+
+    shoe.setCurrentCardCount();
+
     this.hands[whichHandNumber].totalValue = totalHand(handToAddNewCardTo); // total here so that on initial draws it'll know whether or not a blackjack
     this.isABlackjack(this.hands[whichHandNumber]);
   };
 
+  this.findFirstHandAvailableToPlay = function(){
+    for (var thisHandNumber in this.hands){ 
+      if (!this.hands[thisHandNumber].played){
+        return thisHandNumber;
+      } 
+    }
+    return false;
+  }
+
   this.hit = function(thisHandNumber,handCurrentlyBeingPlayed){
     player.draw(thisHandNumber); // grab a random card and add to current hand
-
+    
     handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand); // recalculate value
 
     if (handCurrentlyBeingPlayed.totalValue > 21){
@@ -236,31 +235,6 @@ function Player(){
     // console.log(player.hands);
   }
 
-  this.split = function(){
-
-    // console.log("---------------->\njust began player.split")
-    var totalNumberOfPlayerHands = countNumberOfPlayerHisHands(this.hands); // gets "object of objects" length
-
-    this.hands[totalNumberOfPlayerHands + 1] = {hand:[], played: false}; // new object assigned to next integer
-
-    totalNumberOfPlayerHands = countNumberOfPlayerHisHands(this.hands); // gets "object of objects" length
-
-    player.draw(totalNumberOfPlayerHands);
-    player.draw(totalNumberOfPlayerHands);
-
-    console.log("totalNumberOfPlayerHands = " + totalNumberOfPlayerHands);
-  }
-
-  this.setPlayActionButtons = function(isHandFirstMove){
-    if (isHandFirstMove === true){
-      game.disableAllButtons();
-      game.showButtons("double","stand","hit","split","newgame");
-      isHandFirstMove = false;
-    } else {
-      game.showButtons("stand","hit","split");
-    }
-  }
-
   this.isABlackjack = function(handCurrentlyBeingPlayed){
     if ( (Object.keys(handCurrentlyBeingPlayed.hand).length == 2) && handCurrentlyBeingPlayed.totalValue == 21) { 
       
@@ -276,19 +250,10 @@ function Player(){
     }
   }
 
-  this.findFirstHandAvailableToPlay = function(){
-    for (var thisHandNumber in this.hands){ 
-      if (!this.hands[thisHandNumber].played){
-        return thisHandNumber;
-      } 
-    }
-    return false;
+  this.lose = function(){
+    player.purse -= player.wager;
+    refreshPurse();
   }
-
-  this.setCurrentHandValue = function(handCurrentlyBeingPlayed){
-    handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
-  }
-
 
   this.play = function(){
     if (this.findFirstHandAvailableToPlay()) {
@@ -337,8 +302,51 @@ function Player(){
     });
 
   }
+
+  this.setCurrentHandValue = function(handCurrentlyBeingPlayed){
+    handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
+  }
+
+  this.setPlayActionButtons = function(isHandFirstMove){
+    if (isHandFirstMove === true){
+      game.disableAllButtons();
+      game.showButtons("double","stand","hit","split","newgame");
+      isHandFirstMove = false;
+    } else {
+      game.showButtons("stand","hit","split");
+    }
+  }
+
+  this.split = function(){
+
+    // console.log("---------------->\njust began player.split")
+    var totalNumberOfPlayerHands = countNumberOfPlayerHisHands(this.hands); // gets "object of objects" length
+
+    this.hands[totalNumberOfPlayerHands + 1] = {hand:[], played: false}; // new object assigned to next integer
+
+    totalNumberOfPlayerHands = countNumberOfPlayerHisHands(this.hands); // gets "object of objects" length
+
+    player.draw(totalNumberOfPlayerHands);
+    player.draw(totalNumberOfPlayerHands);
+
+    console.log("totalNumberOfPlayerHands = " + totalNumberOfPlayerHands);
+  }
+
+  this.stand = function(handCurrentlyBeingPlayed){
+    handCurrentlyBeingPlayed.played = true;
+    renderHands();
+    player.play();
+  }
+
+  this.win = function(){
+    player.purse += player.wager;
+    refreshPurse();
+  }
+  
 }
+
 var howManyDecks = 1;
+
 
 var game;
 var shoe;
@@ -347,7 +355,7 @@ var player = new Player();
 newGame = function(){
   // game = undefined;
   // shoe = undefined;
-  tempPurse = player.purse
+  tempPurse = player.purse // holds purse value while resetting hands
   player = {
     purse: tempPurse
   }
