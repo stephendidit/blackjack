@@ -83,25 +83,37 @@ function Game(){
   }
 }
 
-function Deck(){
+function Shoe(){
   this.cards = [];
+  this.initialCardCount;
+  this.currentCardCount;
+  this.SHOE_RESHUFFLE_MARKER = .75;
+
+  this.setInitialCardCount = function(){
+    this.initialCardCount = howManyDecks * 52;
+  }
+
+
+  this.setCurrentCardCount = function(){
+    this.currentCardCount = this.cards.length;
+  }
 
   this.build = function(requestedNumberOfDecks){
-    var ValuesArrayFaceOffset = 0;
-    var ValuesArrayFaceValueOffset = 1;
+    var VALUES_ARRAY_FACE_OFFSET = 0;
+    var VALUES_ARRAY_FACE_VALUE_OFFSET = 1;
     var numberOfDecksBuilt = 0;
-    var cardsArrayOffset = 0;
-    var cardSuitAndCardValueOffset = 0;
-    var cardValueOnlyOffset = 1;
+    var CARDS_ARRAY_OFFSET = 0;
+    var CARD_SUIT_CARD_VALUE_OFFSET = 0;
+    var CARD_VALUE_ONLY_OFFSET = 1;
 
     while (numberOfDecksBuilt < requestedNumberOfDecks){          
       suitsArray.forEach(function (suit){ // for each symbol
         valuesArray.forEach(function(value){ // for each value
           
-          deck.cards[cardsArrayOffset] = []; // make an element that's also an array for the new card, in the position of the current index
-          deck.cards[cardsArrayOffset][cardSuitAndCardValueOffset] = suit + value[ValuesArrayFaceOffset]; // the new element/array's first element = symbol + value[0]
-          deck.cards[cardsArrayOffset][cardValueOnlyOffset] = value[ValuesArrayFaceValueOffset]; // the new element/array's second element = value[1]
-          cardsArrayOffset++; // increase the index
+          shoe.cards[CARDS_ARRAY_OFFSET] = []; // make an element that's also an array for the new card, in the position of the current index
+          shoe.cards[CARDS_ARRAY_OFFSET][CARD_SUIT_CARD_VALUE_OFFSET] = suit + value[VALUES_ARRAY_FACE_OFFSET]; // the new element/array's first element = symbol + value[0]
+          shoe.cards[CARDS_ARRAY_OFFSET][CARD_VALUE_ONLY_OFFSET] = value[VALUES_ARRAY_FACE_VALUE_OFFSET]; // the new element/array's second element = value[1]
+          CARDS_ARRAY_OFFSET++; // increase the index
         });
       });
       numberOfDecksBuilt++;
@@ -135,7 +147,7 @@ function Dealer(){
   this.hand = [];
 
   this.draw = function(){
-    this.hand.push( deck.getNewCardFrom() );
+    this.hand.push( shoe.getNewCardFrom() );
 
   };
 
@@ -189,8 +201,10 @@ function Player(){
   this.draw = function(whichHandNumber){
     console.log("about to draw card for hand " + whichHandNumber)
     var handToAddNewCardTo = this.hands[whichHandNumber]['hand']
-    handToAddNewCardTo.push( deck.getNewCardFrom() );
+    handToAddNewCardTo.push( shoe.getNewCardFrom() );
     renderHands();
+    this.hands[whichHandNumber].totalValue = totalHand(handToAddNewCardTo); // total here so that on initial draws it'll know whether or not a blackjack
+    this.isABlackjack(this.hands[whichHandNumber]);
   };
 
   this.hit = function(thisHandNumber,handCurrentlyBeingPlayed){
@@ -240,7 +254,7 @@ function Player(){
   this.setPlayActionButtons = function(isHandFirstMove){
     if (isHandFirstMove === true){
       game.disableAllButtons();
-      game.showButtons("double","stand","hit","split");
+      game.showButtons("double","stand","hit","split","newgame");
       isHandFirstMove = false;
     } else {
       game.showButtons("stand","hit","split");
@@ -249,9 +263,15 @@ function Player(){
 
   this.isABlackjack = function(handCurrentlyBeingPlayed){
     if ( (Object.keys(handCurrentlyBeingPlayed.hand).length == 2) && handCurrentlyBeingPlayed.totalValue == 21) { 
+      
       game.disableAllButtons();
+      
       this.purse += (this.wager * 1.5);
+      
       refreshPurse();
+
+      handCurrentlyBeingPlayed['played'] = true;
+
       return true;
     }
   }
@@ -278,9 +298,11 @@ function Player(){
 
       this.setCurrentHandValue(handCurrentlyBeingPlayed);
 
-      if ( this.isABlackjack(handCurrentlyBeingPlayed) ) {
-        handCurrentlyBeingPlayed['played'] = true;
-      }
+      this.isABlackjack(handCurrentlyBeingPlayed);
+
+      // if ( this.isABlackjack(handCurrentlyBeingPlayed) ) {
+        // handCurrentlyBeingPlayed['played'] = true;
+      // }
       
       this.setPlayActionButtons(checkIfHandFirstMove(handCurrentlyBeingPlayed));
 
@@ -318,21 +340,39 @@ function Player(){
 }
 var howManyDecks = 1;
 
+var game;
+var shoe;
+var player = new Player();
 
+newGame = function(){
+  // game = undefined;
+  // shoe = undefined;
+  tempPurse = player.purse
+  player = {
+    purse: tempPurse
+  }
+  player = new Player();
+
+  renderHands();
+  game = new Game();
+  shoe = new Shoe();
+  shoe.build(howManyDecks);
+  // dealer.draw(); 
+  player.draw(1);
+  // dealer.draw(); // this one would be face down 
+  player.draw(1);
+
+  player.play();
+
+  // dealer.play(); 
+}
+
+newGame();
 // TESTS
-var game = new Game();
-var deck = new Deck();
-deck.build(howManyDecks);
+// var game = new Game();
+// var shoe = new Shoe();
+// shoe.build(howManyDecks);
 
 // var dealer = new Dealer();
 
-var player = new Player();
 
-// dealer.draw(); 
-player.draw(1);
-// dealer.draw(); // this one would be face down 
-player.draw(1);
-
-player.play();
-
-// dealer.play(); 
