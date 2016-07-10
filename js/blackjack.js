@@ -290,6 +290,9 @@ function Player(){
       player.double();
     })
 
+    $('#newgame').click(function(){
+      newGame();
+    })
 
     $('#split').click(function(){
       player.split();
@@ -348,8 +351,9 @@ function Player(){
 var howManyDecks = 1;
 
 
-var game;
-var shoe;
+var game = new Game();
+var shoe = new Shoe();
+shoe.build(howManyDecks);
 var player = new Player();
 
 newGame = function(){
@@ -362,9 +366,6 @@ newGame = function(){
   player = new Player();
 
   renderHands();
-  game = new Game();
-  shoe = new Shoe();
-  shoe.build(howManyDecks);
   // dealer.draw(); 
   player.draw(1);
   // dealer.draw(); // this one would be face down 
