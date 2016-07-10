@@ -3,6 +3,8 @@ var suitsArray = ['h','s','c','d'];
 var valuesArray = [['a',1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],['j',10],['q',10],['k',10]];
 
 function renderHands(){
+  
+  // 
   $('#player').empty();
 
   for (var i = 1; i <= countNumberOfPlayerHisHands(player.hands); i++){
@@ -29,21 +31,28 @@ function renderHands(){
 
 function totalHand(hand){
   var totalValueOfHand = 0; // zero out the total
-  var numberOfAcesInHand = 0; // zero out the number of aces...i think this is dealer's totaling, then.
-  var CARD_VALUE_OFFSET = 1;
-  
+  var numberOfAcesInHand = 0; // zero out the number of aces so we can determine their value later
+  var CARD_VALUE_OFFSET = 1; // constant. this is the offset that has the value as integer
+  var INITIAL_VALUE_OF_ACE = 1; // constant. all Aces have value of 1, initially.
+
   hand.forEach(function(card){ // for each element in the dealer's hand
-    if (card[CARD_VALUE_OFFSET] == 1) {
-      numberOfAcesInHand += 1; // add 1 to the number of aces we're counting
-    } else { // but if it's not an ace...
-      totalValueOfHand += card[CARD_VALUE_OFFSET]; // then add the card to the total
+    
+    var valueOfCard = card[CARD_VALUE_OFFSET];
+
+    // First, total the cards that are NOT aces. Any aces, just count them.
+    if (valueOfCard == INITIAL_VALUE_OF_ACE) {
+      numberOfAcesInHand += 1;
+    } else {
+      totalValueOfHand += valueOfCard;
     }
   });
 
+  // Then, add any Aces to the hand, either with value of 1 or 11, 
+  // whichever will get total as close to 21 without going over.
   while (numberOfAcesInHand > 0){ // while there's more than 0 aces
     if ((totalValueOfHand + 11) > 21){ // if the total + 11 goes over 21
       totalValueOfHand +=1; // then the ace needs to be treated as a 1
-    } else { // otherwise
+    } else {
       totalValueOfHand += 11; // treat it as an 11
     }
     numberOfAcesInHand--; // remove one ace from the count
@@ -220,19 +229,15 @@ function Player(){
       renderHands();
 
       game.disableAllButtons();
-      // player.play();
+      game.showButtons("newgame");
+
+
     } else if (handCurrentlyBeingPlayed.totalValue == 21){
       handCurrentlyBeingPlayed.played = true;
       console.log("This is the best score you can get with this hand--so...moving on!")
       game.disableAllButtons();
       renderHands();
     }
-
-    // handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
-
-    // player.play();
-
-    // console.log(player.hands);
   }
 
   this.isABlackjack = function(handCurrentlyBeingPlayed){
@@ -259,15 +264,10 @@ function Player(){
     if (this.findFirstHandAvailableToPlay()) {
       var handCurrentlyBeingPlayed = this.hands[this.findFirstHandAvailableToPlay()];
       var thisHandNumber = this.findFirstHandAvailableToPlay();
-      console.log(">>>>>>>>\nThere's a hand to play! HAND " + thisHandNumber + "\n<<<<<<<<");
 
       this.setCurrentHandValue(handCurrentlyBeingPlayed);
 
       this.isABlackjack(handCurrentlyBeingPlayed);
-
-      // if ( this.isABlackjack(handCurrentlyBeingPlayed) ) {
-        // handCurrentlyBeingPlayed['played'] = true;
-      // }
       
       this.setPlayActionButtons(checkIfHandFirstMove(handCurrentlyBeingPlayed));
 
@@ -276,14 +276,13 @@ function Player(){
     }
     
     $('#hit').click(function(){
-      console.log("about to send thisHandNumber: " + thisHandNumber);
-      // console.log("as well as handCurrentlyBeingPlayed: " + handCurrentlyBeingPlayed);
+
       player.hit(thisHandNumber,handCurrentlyBeingPlayed)
 
       handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
 
       player.play();
-      console.log(player.hands);
+
     });
 
     $('#double').click(function(){
@@ -300,8 +299,6 @@ function Player(){
 
     $('#stand').click(function(){
       player.stand(handCurrentlyBeingPlayed);
-      // handCurrentlyBeingPlayed.totalValue = totalHand(handCurrentlyBeingPlayed.hand);
-      // console.log("post-move/inside while Hand value: " + handCurrentlyBeingPlayed.totalValue);
     });
 
   }
@@ -353,15 +350,15 @@ var howManyDecks = 1;
 
 var game = new Game();
 var shoe = new Shoe();
+
 shoe.build(howManyDecks);
+
 var player = new Player();
 
 newGame = function(){
-  // game = undefined;
-  // shoe = undefined;
-  tempPurse = player.purse // holds purse value while resetting hands
+  previousPurseValue = player.purse // holds purse value while resetting hands
   player = {
-    purse: tempPurse
+    purse: previousPurseValue
   }
   player = new Player();
 
@@ -377,11 +374,4 @@ newGame = function(){
 }
 
 newGame();
-// TESTS
-// var game = new Game();
-// var shoe = new Shoe();
-// shoe.build(howManyDecks);
-
-// var dealer = new Dealer();
-
 
