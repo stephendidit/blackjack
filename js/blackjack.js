@@ -174,9 +174,9 @@ function Dealer(){
   };
 }
 
-function Player(){
+function Player(purse=999){
   // this.hand = [];
-  this.purse = 1000;
+  this.purse = purse;
   this.wager = 25;
 
   $('#wager').html("Wager: $" + this.wager);
@@ -357,10 +357,10 @@ var player = new Player();
 
 newGame = function(){
   previousPurseValue = player.purse // holds purse value while resetting hands
-  player = {
-    purse: previousPurseValue
-  }
-  player = new Player();
+  alert(previousPurseValue)
+  player = new Player(previousPurseValue);
+  player.purse = previousPurseValue
+
 
   renderHands();
   // dealer.draw(); 
