@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <title>Blackjack Attempt</title>
-<!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" /> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
 <!-- <link rel="stylesheet" type="text/css" href="css/main.css" /> -->
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 
@@ -15,88 +15,108 @@
 
 </style>
 <body>
-<h3>Bugs:</h3>
-<ol>
-  <li></li>
-</ol>
-<h3>To Do:</h3>
-<ol>
-  <!-- <li>'Hold' button</li> -->
-  <!-- <li>Split auto draw 2 cards</li> -->
-  <li>Split button appears conditionally</li>
-  <!-- <li>Double doubles wager</li> -->
-  <li>Double button appears conditionally</li>
-  <li>Compare To Dealer's Cards</li>
-  <li>Start new game with continued purse</li>
-  <li>Select your own bet</li>
-  <!-- <li>Indicate hand being played</li> -->
-</ol>
+<div class="container">
+  <h3>Bugs:</h3>
+  <ol>
+    <li></li>
+  </ol>
+  <h3>To Do:</h3>
+  <ol>
+    <!-- <li>'Hold' button</li> -->
+    <!-- <li>Split auto draw 2 cards</li> -->
+    <li>Split button appears conditionally</li>
+    <!-- <li>Double doubles wager</li> -->
+    <li>Double button appears conditionally</li>
+    <li>Compare To Dealer's Cards</li>
+    <!-- <li>Start new game with continued purse</li> -->
+    <li>Select your own bet</li>
+    <li>Shoe reshuffle at 25%</li>
+    <li>Shoe visual indicator</li>
+    <!-- <li>Indicate hand being played</li> -->
+    <li>Game Over at 0--which means we need a total game reset.</li>
+  </ol>
 
-<div id="scores">
-  <div id="wager"></div>
-  <div id="purse"></div>
-</div>
-<div id="player">Player
-</div>
-<div id="scorebox"></div>
+  <div class="row">
+    <div class="col-md-12" id="dealer"></div>
+  </div>
 
-<!-- 
-* 1. Build Deck // built as buildDeck()
-* Create Dealer
-* Create Player
-* 2. Shuffle Deck // built as shuffle()
-* 3. player Places Wager
-  * wager = wager1
-* 4. Deal one card to player (face up)
-* 5. Deal one card to dealer (face down)
-* 6. Deal one card to player (face up)
-* 7. Deal one card to dealer (face up)
 
-8. Dealer Hits Until Score of >= 17
+  <!-- 
+  * 1. Build Deck // built as buildDeck()
+  * Create Dealer
+  * Create Player
+  * 2. Shuffle Deck // built as shuffle()
+  * 3. player Places Wager
+    * wager = wager1
+  * 4. Deal one card to player (face up)
+  * 5. Deal one card to dealer (face down)
+  * 6. Deal one card to player (face up)
+  * 7. Deal one card to dealer (face up)
 
-Resolve Wagers
-def resolve
-  hands.each
-    if hand == dealer
-      push (player keeps original wager)
-    else
-      if hand <= 21
-        if dealer > 21
-          hand wins
-        elsif hand > dealer
-          hand wins
-        elsif hand > player
+  8. Dealer Hits Until Score of >= 17
+
+  Resolve Wagers
+  def resolve
+    hands.each
+      if hand == dealer
+        push (player keeps original wager)
+      else
+        if hand <= 21
+          if dealer > 21
+            hand wins
+          elsif hand > dealer
+            hand wins
+          elsif hand > player
+            house wins
+        elsif hand > 21
           house wins
-      elsif hand > 21
-        house wins
+        end
       end
     end
   end
-end
 
-Discard Used Cards
-Shuffle Remaining Cards and begin again -->
+  Discard Used Cards
+  Shuffle Remaining Cards and begin again -->
 
-<div id="buttons">
-  <button id="hit" class="button" hidden>Hit</button>
-  <button id="stand" class="button" hidden>Stand</button>
-  <button id="double" class="button" hidden>Double</button>
-  <button id="split" class="button" hidden>Split</button>
-  <button id="drawpush" class="button" hidden>Draw/Push</button>
-  <button id="newgame" class="button" hidden>New Game</button>
-</div>
+  
+  <div class="row">
+    <div class="col-md-5 well" id="buttons">
+      <button id="hit" class="button btn btn-default" hidden>Hit</button>
+      <button id="stand" class="button btn btn-default" hidden>Stand</button>
+      <button id="double" class="button btn btn-default" hidden>Double</button>
+      <button id="split" class="button btn btn-default" hidden>Split</button>
+      <button id="drawpush" class="button btn btn-default" hidden>Draw/Push</button>
+      <button id="newgame" class="button btn btn-default" hidden>New Game</button>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5 well" id="scores">
+      <div id="wager"></div>
+      <div id="purse"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="player">Player
+    </div>
+  </div>
 
 
-<!-- <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script> -->
+</div><!--container-->
+
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
 <!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.2/js/tether.min.js"></script> -->
-<!-- <script src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js" crossorigin="anonymous"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.2/js/tether.min.js"></script>
+<script src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js" crossorigin="anonymous"></script>
 <!-- <script src="https://use.fontawesoplayer.com/343cc4bbfb.js"></script> -->
 <script src="https://fb.me/react-15.2.0.min.js"></script>
 <script src="https://fb.me/react-dom-15.2.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<!-- <script type="text/babel" src="js/components.js"></script> -->
+
+<script src="js/player.js"></script>
+<script src="js/dealer.js"></script>
+<script src="js/shoe.js"></script>
+<script src="js/game.js"></script>
+<script src="js/render.js"></script>
 <script src="js/blackjack.js"></script>
 
 
